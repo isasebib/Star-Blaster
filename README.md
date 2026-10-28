@@ -2,8 +2,6 @@
 
 **[▶ Play in your browser](https://isasebib.itch.io/star-blaster)**
 
-![Star Blaster gameplay](Public/star-blaster.png)
-
 A fast-paced 2D space shooter built with **Unity 6** and **C#**. Pilot your ship, blast through waves of enemy fighters, and survive as long as you can. Playable on desktop and mobile with simple one-finger controls.
 
 ## Features
