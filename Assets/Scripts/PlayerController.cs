@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rightPadding = 1f;
     [SerializeField] float bottomPadding = 1f;
     [SerializeField] float upPadding = 15f;
+    [SerializeField] float touchSensitivity = 1f;
 
     Shooter playerShooter;
     InputAction moveAction;
@@ -41,15 +42,29 @@ public class PlayerController : MonoBehaviour
         FireShooter();
     }
 
-    void MovePlayer() {
-        moveVector = moveAction.ReadValue<Vector2>();
-        Vector3 newPos = transform.position + moveVector * moveSpeed * Time.deltaTime;
+void MovePlayer()
+{
+    Vector2 input = moveAction.ReadValue<Vector2>();
+    Vector3 newPos = transform.position;
+    var control = moveAction.activeControl;
 
-        newPos.x = Math.Clamp(newPos.x, minBounds.x + leftPadding , maxBounds.x - rightPadding);
-        newPos.y = Math.Clamp(newPos.y, minBounds.y + bottomPadding, maxBounds.y - upPadding);
-
-        transform.position = newPos;
+    if (control != null && control.device is Touchscreen)
+    {
+        // Parmak (ya da simüle fare): piksel -> dünya birimi, deltaTime yok
+        float worldPerPixel = (maxBounds.y - minBounds.y) / Screen.height;
+        newPos += (Vector3)(input * worldPerPixel * touchSensitivity);
     }
+    else
+    {
+        // WASD ve gamepad
+        newPos += (Vector3)input * moveSpeed * Time.deltaTime;
+    }
+
+    newPos.x = Math.Clamp(newPos.x, minBounds.x + leftPadding, maxBounds.x - rightPadding);
+    newPos.y = Math.Clamp(newPos.y, minBounds.y + bottomPadding, maxBounds.y - upPadding);
+
+    transform.position = newPos;
+}
 
     void FireShooter()
     {
